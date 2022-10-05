@@ -1,0 +1,44 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: go-rabbit-server
+  labels:
+    name: go-rabbit-server
+    component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        name: go-rabbit-server
+        component: server
+    spec:
+      containers:
+        - name: go-rabbit-server
+          image: go-rabbit-server
+          ports:
+          - containerPort: 8090
+          env:
+            - name: RABBIT_URL
+              value: "amqp://guest:guest@hello-world:5672/"
+            - name: EXCHANGE
+              value: "exchange1"
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          imagePullPolicy: Never
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

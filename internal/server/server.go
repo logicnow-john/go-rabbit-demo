@@ -2,7 +2,9 @@ package server
 
 import (
 	"fmt"
+	"go-rabbit-demo/internal/config"
 	"go-rabbit-demo/internal/rabbitmq"
+	"log"
 	"net/http"
 )
 
@@ -18,14 +20,19 @@ func Hello(w http.ResponseWriter, req *http.Request) {
 }
 
 func Result(w http.ResponseWriter, req *http.Request) {
+	configObj, err := config.LoadConfig("./cmd/server")
+	if err != nil {
+		log.Fatal("cannot load configObj:", err)
+	}
+
 	typeRequest := req.URL.Query().Get("type")
 	routingKey := req.URL.Query().Get("routingKey")
 
-	conn := rabbitmq.CreateConnection("amqp://guest:guest@localhost:5672/")
+	conn := rabbitmq.CreateConnection(configObj.RabbitUrl)
 
 	ch := rabbitmq.CreateChannel(conn)
 
-	rabbitmq.PublishMessage(ch, req.Context(), "exchange1", routingKey, typeRequest)
+	rabbitmq.PublishMessage(ch, req.Context(), configObj.Exchange, routingKey, typeRequest)
 
 	_, _ = fmt.Fprintf(w, "Published: %s\n", typeRequest)
 }

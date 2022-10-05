@@ -48,7 +48,18 @@ K8s Operators are controllers for packaging, managing, and deploying application
 
 ```kubectl port-forward "service/hello-world" 15672```
 
-```username="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.username}' | base64 --decode)" && password="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.password}' | base64 --decode)" && echo "username: $username, password: $password"```
+linux:
+```
+username="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.username}' | base64 --decode)" && password="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.password}' | base64 --decode)" && echo "username: $username, password: $password"
+```
+windows:
+```
+$username="$([Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($(kubectl get secret hello-world-default-user -o jsonpath='{.data.username}'))) )"
+
+$password="$([Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($(kubectl get secret hello-world-default-user -o jsonpath='{.data.password}'))) )"
+
+Write-Output "username: $username, password: $password"
+```
 
 7. Add an exchange, add a user
 

@@ -1,9 +1,9 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: go-rabbit-demo
+  name: go-rabbit-consumer
   labels:
-    name: go-rabbit-demo
+    name: go-rabbit-consumer
     component: consumer
 spec:
   replicas: 1
@@ -18,18 +18,21 @@ spec:
   template:
     metadata:
       labels:
-        name: go-rabbit-demo
+        name: go-rabbit-consumer
         component: consumer
     spec:
       containers:
-        - name: go-rabbit-demo
-          image: go-rabbit-demo
+        - name: go-rabbit-consumer
+          image: go-rabbit-consumer
           env:
-            - name: CONSUMER_ID
-              value: "rabbit"
-          envFrom:
-            - configMapRef:
-                name: go-rabbit-demo-env-vars
+            - name: RABBIT_URL
+              value: "amqp://guest:guest@hello-world:5672/"
+            - name: QUEUE_NAME
+              value: "testQueue2"
+            - name: ROUTING_KEY
+              value: "bye"
+            - name: EXCHANGE
+              value: "exchange1"
           resources:
             requests:
               cpu: 300m
@@ -37,7 +40,7 @@ spec:
             limits:
               cpu: 500m
               memory: 500Mi
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           terminationMessagePolicy: File
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

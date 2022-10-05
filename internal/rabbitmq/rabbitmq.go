@@ -11,7 +11,7 @@ func CreateConnection(url string) *amqp.Connection {
 	if err != nil {
 		log.Panic("Failed to connect to RabbitMQ", err)
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	return conn
 }
 
@@ -20,7 +20,7 @@ func CreateChannel(conn *amqp.Connection) *amqp.Channel {
 	if err != nil {
 		log.Panic("Failed to open a channel", err)
 	}
-	defer ch.Close()
+	//defer ch.Close()
 	return ch
 }
 

@@ -86,3 +86,7 @@ K8s Operators are controllers for packaging, managing, and deploying application
 14. Hit endpoint in browser
 
 ```http://localhost:8090/result?type=andy4```
+
+15. Ramp up requests with k6
+
+```k6 run script.js```

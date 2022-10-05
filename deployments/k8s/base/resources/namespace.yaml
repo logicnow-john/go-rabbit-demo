@@ -2,6 +2,4 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: go-rabbit-demo
-  annotations:
-    iam.amazonaws.com/permitted: ".*"
-    splunk.com/index: "p-rmm-dev"
+
